@@ -1,6 +1,8 @@
+import Navigation from './NavBar.js'
+
 const WeatherPage = () => {
   return (
-      <div> WeatherPage </div>
+    <Navigation />
   )
 }
 
