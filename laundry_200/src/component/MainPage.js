@@ -1,6 +1,8 @@
+import Navigation from './NavBar.js'
+
 const MainPage = () => {
   return (
-      <div> MainPage </div>
+      <Navigation />
   )
 }
 
