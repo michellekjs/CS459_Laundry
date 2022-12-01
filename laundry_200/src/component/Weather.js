@@ -1,7 +1,8 @@
 //get input from the weather
-import rainy from "../image/rainy.png"
-import sunny from "../image/sunny.png"
-import snowy from "../image/snowy.png"
+import Rain from "../image/rainy.png"
+import Clear from "../image/sunny.png"
+import Snow from "../image/snowy.png"
+import Clouds from "../image/cloudy.png"
 
 function Weather(props) {
   return (
@@ -11,7 +12,7 @@ function Weather(props) {
 		flexDirection: "column", margin:"20px"}}>
       <div> {props.day} </div>
       <div> {props.weather} </div>
-      <img src= {snowy} />
+      <img src= {props.weather} />
     </div>
   ) 
 }

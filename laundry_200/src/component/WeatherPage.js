@@ -58,22 +58,23 @@ const WeatherPage = () => {
   
   const jsonArray = new Array(40)
 
-  async function getWeather() {
-    await axios.get(weatherUrl).then((response) => {
-      for (var i=0 ; i<response.data.list.length; i++) {
-        jsonArray[i] = ((response.data.list[i]))
-      }        
-      console.log(jsonArray)
-    })
-  }
-
-  window.onload = function() {
+  useEffect(()=> {
+    let unmounted = false;
+    async function getWeather() {
+      let response = await axios.get(weatherUrl);
+      if (!unmounted) {
+        for (var i=0 ; i<response.data.list.length; i++) {
+          jsonArray[i] = ((response.data.list[i]))
+        }
+        setarr(jsonArray)
+      }
+    }
     getWeather()
-    setarr(jsonArray)
-  }
-
-  console.log(arr)
-
+    console.log(jsonArray)
+    return() => {
+      unmounted = true
+    }
+  }, [])
 
   return (
     <>
@@ -82,17 +83,17 @@ const WeatherPage = () => {
       <div style={styles.horizontal}>
         <Grid container justifyContent="space-between">
           <Grid item>
-            <Typography>Recommended</Typography>
+            <Typography>Not Recommended</Typography>
           </Grid>
           <Grid item>
-            <Typography>Not Recommended</Typography>
+            <Typography>Recommended</Typography>
           </Grid>
         </Grid>
       </div>
 
       <div style={styles.horizontal}>
-        <div style={bar("40%", "skyblue")}></div>
-        <div style={bar("60%", "red")}></div>
+        <div style={bar(arr[0].main.humidity + "%", "skyblue")}></div>
+        <div style={bar(100-arr[0].main.humidity + "%", "red")}></div>
       </div>
 
       {/* weather forecast for the day */}
@@ -144,21 +145,21 @@ const WeatherPage = () => {
         {/* weather forecast for the week */}
         <div style={{ marginTop: "60px" }}> Weather Forecast for the week  - humidity</div>
         <div style={styles.horizontal}>
-          <Weather day={arr[8].dt_txt} weather="sunny" />
-          <Weather day={arr[16].dt_txt} weather="sunny" />
-          <Weather day={arr[24].dt_txt} weather="sunny" />
-          <Weather day={arr[32].dt_txt} weather="sunny" />
+          <Weather day={arr[8].dt_txt} weather= {arr[8].weather[0].main}/>
+          <Weather day={arr[16].dt_txt} weather={arr[16].weather[0].main} />
+          <Weather day={arr[24].dt_txt} weather={arr[24].weather[0].main} />
+          <Weather day={arr[32].dt_txt} weather={arr[32].weather[0].main}/>
 
         </div>
 
         <div style={{ marginTop: "60px" }}> Weather Forecast for today  - by time</div>
-          <div style={styles.horizontal}>
-          <Weather day={arr[0].dt_txt} weather="sunny" />
-          <Weather day={arr[1].dt_txt} weather="sunny" />
-          <Weather day={arr[2].dt_txt} weather="sunny" />
-          <Weather day={arr[3].dt_txt} weather="sunny" />
-          <Weather day={arr[4].dt_txt} weather="sunny" />
-          </div>
+        <div style={styles.horizontal}>
+          <Weather day={arr[0].dt_txt} weather={arr[0].weather[0].main} />
+          <Weather day={arr[1].dt_txt} weather={arr[1].weather[0].main} />
+          <Weather day={arr[2].dt_txt} weather={arr[2].weather[0].main} />
+          <Weather day={arr[3].dt_txt} weather={arr[3].weather[0].main} />
+          <Weather day={arr[4].dt_txt} weather={arr[4].weather[0].main} />
+        </div>
       </div>
     </>
   );
