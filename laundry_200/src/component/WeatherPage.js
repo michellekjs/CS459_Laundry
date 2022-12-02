@@ -47,34 +47,50 @@ const styles = {
     flexDirection: "column",
   },
 };
+// window.location.reload(false);
 
 const WeatherPage = () => {
   const { height, width } = useWindowDimensions();
   const [ arr ,setarr ] = useState([])
-
+  const [temp , setTemp] = useState("")
+  const [hum, setHum] = useState("")
+  const [d1, setd1] = useState([])
+  const [d2, setd2] = useState([])
+  const [d3, setd3] = useState([])
+  const [d4, setd4] = useState([])
+  const [d11, setd11] = useState([])
+  const [d22, setd22] = useState([])
+  const [d33, setd33] = useState([])
+  const [d44, setd44] = useState([])
 
   const weatherUrl = "https://api.openweathermap.org/data/2.5/forecast?lat=36&lon=127&appid=3a3acc40ffe3a923536f1a5f132edcd6"
 
-  
-  const jsonArray = new Array(40)
 
-  useEffect(()=> {
-    let unmounted = false;
-    async function getWeather() {
-      let response = await axios.get(weatherUrl);
-      if (!unmounted) {
+
+    async function getWeather() {  
+      await axios.get(weatherUrl).then(response=> {
+        const jsonArray = []
         for (var i=0 ; i<response.data.list.length; i++) {
-          jsonArray[i] = ((response.data.list[i]))
+          jsonArray.push((response.data.list[i]))
         }
-        setarr(jsonArray)
+        setTemp(jsonArray[0].main.temp)
+        setHum(jsonArray[0].main.humidity)
+        setd1([jsonArray[8].dt_txt,jsonArray[8].weather[0].main] )
+        setd2([jsonArray[16].dt_txt,jsonArray[8].weather[0].main] )
+        setd3([jsonArray[24].dt_txt,jsonArray[8].weather[0].main] )
+        setd4([jsonArray[32].dt_txt,jsonArray[8].weather[0].main] )
+        setd11([jsonArray[0].dt_txt,jsonArray[8].weather[0].main] )
+        setd22([jsonArray[1].dt_txt,jsonArray[8].weather[0].main] )
+        setd33([jsonArray[2].dt_txt,jsonArray[8].weather[0].main] )
+        setd44([jsonArray[3].dt_txt,jsonArray[8].weather[0].main] )
       }
+      )
     }
-    getWeather()
-    console.log(jsonArray)
-    return() => {
-      unmounted = true
-    }
-  }, [])
+
+    useEffect(() => {
+      getWeather();
+    }, [])
+    // getWeather()
 
   return (
     <>
@@ -92,8 +108,8 @@ const WeatherPage = () => {
       </div>
 
       <div style={styles.horizontal}>
-        <div style={bar(arr[0].main.humidity + "%", "skyblue")}></div>
-        <div style={bar(100-arr[0].main.humidity + "%", "red")}></div>
+        <div style={bar( hum + "%", "skyblue")}></div> 
+        <div style={bar(100-hum + "%", "red")}></div> 
       </div>
 
       {/* weather forecast for the day */}
@@ -108,7 +124,7 @@ const WeatherPage = () => {
                 marginRight: "50px",
               }}
             >
-            {arr[0].main.temp}degrees
+            {temp}degrees
             </div>{" "}
             Celcius{" "}
           </div>
@@ -145,24 +161,23 @@ const WeatherPage = () => {
         {/* weather forecast for the week */}
         <div style={{ marginTop: "60px" }}> Weather Forecast for the week  - humidity</div>
         <div style={styles.horizontal}>
-          <Weather day={arr[8].dt_txt} weather= {arr[8].weather[0].main}/>
-          <Weather day={arr[16].dt_txt} weather={arr[16].weather[0].main} />
-          <Weather day={arr[24].dt_txt} weather={arr[24].weather[0].main} />
-          <Weather day={arr[32].dt_txt} weather={arr[32].weather[0].main}/>
-
+          <Weather day={d1[0]} weather= {d1[1]}/>
+          <Weather day={d2[0]} weather= {d2[1]}/>
+          <Weather day={d3[0]} weather= {d3[1]}/>
+          <Weather day={d4[0]} weather= {d4[1]}/>
         </div>
 
         <div style={{ marginTop: "60px" }}> Weather Forecast for today  - by time</div>
         <div style={styles.horizontal}>
-          <Weather day={arr[0].dt_txt} weather={arr[0].weather[0].main} />
-          <Weather day={arr[1].dt_txt} weather={arr[1].weather[0].main} />
-          <Weather day={arr[2].dt_txt} weather={arr[2].weather[0].main} />
-          <Weather day={arr[3].dt_txt} weather={arr[3].weather[0].main} />
-          <Weather day={arr[4].dt_txt} weather={arr[4].weather[0].main} />
+          <Weather day={d11[0]} weather= {d11[1]}/>
+          <Weather day={d22[0]} weather= {d22[1]}/>
+          <Weather day={d33[0]} weather= {d33[1]}/>
+          <Weather day={d44[0]} weather= {d44[1]}/>
         </div>
       </div>
     </>
   );
 };
+
 
 export default WeatherPage;
