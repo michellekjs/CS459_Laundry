@@ -2,7 +2,8 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import loginimg from '../image/login.png'
 import useWindowDimensions from './WindowSize.js'
-import GoogleLogin from "react-google-login"
+import GoogleLoginButton from './LoginButton.js'
+
 
 const responseGoogle = (res) => {
   console.log(res);
@@ -31,14 +32,7 @@ const LoginPage = () => {
           <TextField id="filled-basic" label="ID" variant="filled" style={idformat} />
           <TextField id="filled-basic" label="Password" variant="filled" style={pwdformat} />
           <div className="loginbtngroup" style={{display:"flex", flexDirection:"row", }}>
-            <Button variant="contained">Kakao</Button>
-            <GoogleLogin 
-              clientId = {clientId}
-              buttonText = "Login with Google"
-              onSuccess = {responseGoogle}
-              onFailure = {responseGoogle} 
-              redirectUri = "/weather"/>
-            <Button variant="contained">Login</Button>
+           <GoogleLoginButton/>
           </div>
         </div>
       </div>
