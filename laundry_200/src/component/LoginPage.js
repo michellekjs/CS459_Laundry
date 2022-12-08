@@ -2,9 +2,19 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import loginimg from '../image/login.png'
 import useWindowDimensions from './WindowSize.js'
+import GoogleLoginButton from './LoginButton.js'
 
 
+const responseGoogle = (res) => {
+  console.log(res);
+}
 
+const clientId = "536269962551-94rqvm4206q5tthq924t3diai5tvaphj.apps.googleusercontent.com"
+
+const move = () => {
+  this.props.history.push('localhost:3000/weather')
+}
+              
 const LoginPage = () => {
   const { height, width } = useWindowDimensions();
   
@@ -22,9 +32,7 @@ const LoginPage = () => {
           <TextField id="filled-basic" label="ID" variant="filled" style={idformat} />
           <TextField id="filled-basic" label="Password" variant="filled" style={pwdformat} />
           <div className="loginbtngroup" style={{display:"flex", flexDirection:"row", }}>
-            <Button variant="contained">Kakao</Button>
-            <Button variant="contained">Google</Button>
-            <Button variant="contained">Login</Button>
+           <GoogleLoginButton/>
           </div>
         </div>
       </div>
