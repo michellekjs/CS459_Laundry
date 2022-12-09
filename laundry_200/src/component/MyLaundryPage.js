@@ -7,6 +7,18 @@ import washingMachineCompImg from "../image/washing-machine-complete.png";
 import moment from "moment";
 
 const MyLaundryPage = () => {
+  let [ status, setStatus ] = useState(true);
+
+  if(status) {
+    setTimeout(()=> {
+      axios.get('http://localhost:1234/req')
+            .then(function(response) {
+              setStatus(response.data.state);
+              console.log(response.data.state);
+            });
+    }, 10*1000);
+  }
+
   /**
    * API needed
    * {
@@ -20,7 +32,8 @@ const MyLaundryPage = () => {
   const expectedEnd = "2022-11-23T17:30:00";
 
   // check whether the laundry is completed
-  const completed = moment() >= moment(expectedEnd, "YYYY-MM-DDTHH:mm:ss");
+  // const completed = moment() >= moment(expectedEnd, "YYYY-MM-DDTHH:mm:ss");
+  const completed = !status;
 
   // To calculate the time left between the current time and the expected time left
   const timeLeft = moment(expectedEnd, "YYYY-MM-DDTHH:mm:ss").diff(
