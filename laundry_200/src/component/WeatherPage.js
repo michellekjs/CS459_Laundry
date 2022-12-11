@@ -2,10 +2,8 @@ import Navigation from "./NavigationBar.js";
 import Weather from "./Weather.js";
 import useWindowDimensions from "./WindowSize.js";
 import { Grid, Toolbar, Typography } from "@mui/material";
-import axios from 'axios';
-import React, { useState, useEffect } from 'react';
-
-
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 
 const circle = (e) => {
   return {
@@ -50,47 +48,68 @@ const styles = {
 // window.location.reload(false);
 
 const WeatherPage = () => {
+  // Get current geolocation through Geolocation API
+  // https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API
+  const [latitude, setLatitude] = useState("36");
+  const [longitude, setLongitude] = useState("127");
+
+  const options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0,
+  };
+
+  function success(pos) {
+    const crd = pos.coords;
+
+    setLatitude(crd.latitude);
+    setLongitude(crd.longitude);
+  }
+
+  function error(err) {
+    console.warn(`ERROR(${err.code}): ${err.message}`);
+  }
+
+  navigator.geolocation.getCurrentPosition(success, error, options);
+
   const { height, width } = useWindowDimensions();
-  const [ arr ,setarr ] = useState([])
-  const [temp , setTemp] = useState("")
-  const [hum, setHum] = useState("")
-  const [d1, setd1] = useState([])
-  const [d2, setd2] = useState([])
-  const [d3, setd3] = useState([])
-  const [d4, setd4] = useState([])
-  const [d11, setd11] = useState([])
-  const [d22, setd22] = useState([])
-  const [d33, setd33] = useState([])
-  const [d44, setd44] = useState([])
+  const [arr, setarr] = useState([]);
+  const [temp, setTemp] = useState("");
+  const [hum, setHum] = useState("");
+  const [d1, setd1] = useState([]);
+  const [d2, setd2] = useState([]);
+  const [d3, setd3] = useState([]);
+  const [d4, setd4] = useState([]);
+  const [d11, setd11] = useState([]);
+  const [d22, setd22] = useState([]);
+  const [d33, setd33] = useState([]);
+  const [d44, setd44] = useState([]);
 
-  const weatherUrl = "https://api.openweathermap.org/data/2.5/forecast?lat=36&lon=127&appid=3a3acc40ffe3a923536f1a5f132edcd6"
+  const weatherUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=3a3acc40ffe3a923536f1a5f132edcd6`;
 
-
-
-    async function getWeather() {  
-      await axios.get(weatherUrl).then(response=> {
-        const jsonArray = []
-        for (var i=0 ; i<response.data.list.length; i++) {
-          jsonArray.push((response.data.list[i]))
-        }
-        setTemp(jsonArray[0].main.temp)
-        setHum(jsonArray[0].main.humidity)
-        setd1([jsonArray[8].dt_txt,jsonArray[8].weather[0].main] )
-        setd2([jsonArray[16].dt_txt,jsonArray[8].weather[0].main] )
-        setd3([jsonArray[24].dt_txt,jsonArray[8].weather[0].main] )
-        setd4([jsonArray[32].dt_txt,jsonArray[8].weather[0].main] )
-        setd11([jsonArray[0].dt_txt,jsonArray[8].weather[0].main] )
-        setd22([jsonArray[1].dt_txt,jsonArray[8].weather[0].main] )
-        setd33([jsonArray[2].dt_txt,jsonArray[8].weather[0].main] )
-        setd44([jsonArray[3].dt_txt,jsonArray[8].weather[0].main] )
+  async function getWeather() {
+    await axios.get(weatherUrl).then((response) => {
+      const jsonArray = [];
+      for (var i = 0; i < response.data.list.length; i++) {
+        jsonArray.push(response.data.list[i]);
       }
-      )
-    }
+      setTemp(jsonArray[0].main.temp);
+      setHum(jsonArray[0].main.humidity);
+      setd1([jsonArray[8].dt_txt, jsonArray[8].weather[0].main]);
+      setd2([jsonArray[16].dt_txt, jsonArray[8].weather[0].main]);
+      setd3([jsonArray[24].dt_txt, jsonArray[8].weather[0].main]);
+      setd4([jsonArray[32].dt_txt, jsonArray[8].weather[0].main]);
+      setd11([jsonArray[0].dt_txt, jsonArray[8].weather[0].main]);
+      setd22([jsonArray[1].dt_txt, jsonArray[8].weather[0].main]);
+      setd33([jsonArray[2].dt_txt, jsonArray[8].weather[0].main]);
+      setd44([jsonArray[3].dt_txt, jsonArray[8].weather[0].main]);
+    });
+  }
 
-    useEffect(() => {
-      getWeather();
-    }, [])
-    // getWeather()
+  useEffect(() => {
+    getWeather();
+  }, []);
+  // getWeather()
 
   return (
     <>
@@ -108,13 +127,13 @@ const WeatherPage = () => {
       </div>
 
       <div style={styles.horizontal}>
-        <div style={bar( hum + "%", "skyblue")}></div> 
-        <div style={bar(100-hum + "%", "red")}></div> 
+        <div style={bar(hum + "%", "skyblue")}></div>
+        <div style={bar(100 - hum + "%", "red")}></div>
       </div>
 
       {/* weather forecast for the day */}
       <div style={styles.vertical}>
-        <div> Weather Forecast for Today </div>
+        <div>Weather Forecast for Today</div>
         <div style={styles.horizontal}>
           <div>
             <div
@@ -124,7 +143,7 @@ const WeatherPage = () => {
                 marginRight: "50px",
               }}
             >
-            {temp}degrees
+              {temp}degrees
             </div>{" "}
             Celcius{" "}
           </div>
@@ -142,7 +161,7 @@ const WeatherPage = () => {
               {" "}
               60%{" "}
             </div>{" "}
-            humidity{" "}
+            Humidity{" "}
           </div>
           <div style={circle("60px")} />
 
@@ -159,25 +178,27 @@ const WeatherPage = () => {
         </div>
 
         {/* weather forecast for the week */}
-        <div style={{ marginTop: "60px" }}> Weather Forecast for the week  - humidity</div>
+        <div style={{ marginTop: "60px" }}> Weather forecast for the week</div>
         <div style={styles.horizontal}>
-          <Weather day={d1[0]} weather= {d1[1]}/>
-          <Weather day={d2[0]} weather= {d2[1]}/>
-          <Weather day={d3[0]} weather= {d3[1]}/>
-          <Weather day={d4[0]} weather= {d4[1]}/>
+          <Weather day={d1[0]} weather={d1[1]} />
+          <Weather day={d2[0]} weather={d2[1]} />
+          <Weather day={d3[0]} weather={d3[1]} />
+          <Weather day={d4[0]} weather={d4[1]} />
         </div>
 
-        <div style={{ marginTop: "60px" }}> Weather Forecast for today  - by time</div>
+        <div style={{ marginTop: "60px" }}>
+          {" "}
+          Weather Forecast for today - by Time
+        </div>
         <div style={styles.horizontal}>
-          <Weather day={d11[0]} weather= {d11[1]}/>
-          <Weather day={d22[0]} weather= {d22[1]}/>
-          <Weather day={d33[0]} weather= {d33[1]}/>
-          <Weather day={d44[0]} weather= {d44[1]}/>
+          <Weather day={d11[0]} weather={d11[1]} />
+          <Weather day={d22[0]} weather={d22[1]} />
+          <Weather day={d33[0]} weather={d33[1]} />
+          <Weather day={d44[0]} weather={d44[1]} />
         </div>
       </div>
     </>
   );
 };
-
 
 export default WeatherPage;

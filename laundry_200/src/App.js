@@ -5,6 +5,7 @@ import LoginPage from "./component/LoginPage";
 import WeatherPage from "./component/WeatherPage";
 import StatusPage from "./component/StatusPage";
 import MyLaundryPage from "./component/MyLaundryPage";
+import EmptyLaundryPage from "./component/EmptyLaundryPage";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -17,7 +18,8 @@ function App() {
           <Route path="/" element={<MainPage />} />
           <Route path="/weather" element={<WeatherPage />} />
           <Route path="/status" element={<StatusPage />} />
-          <Route path="/my-laundry" element={<MyLaundryPage />} />
+          <Route path="/my-laundry" element={<EmptyLaundryPage />} />
+          <Route path="/my-laundry/:id" element={<MyLaundryPage />} />
         </Routes>
       </BrowserRouter>
     </div>

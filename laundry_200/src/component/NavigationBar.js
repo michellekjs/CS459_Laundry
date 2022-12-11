@@ -82,13 +82,18 @@ function NavBar(props) {
             >
               <MenuIcon />
             </IconButton>
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+            <Button
+              href="/"
+              sx={{
+                flexGrow: 1,
+                display: { xs: "none", sm: "block" },
+                color: "#fff",
+              }}
             >
-              {appTitle}
-            </Typography>
+              <Typography variant="h6" component="div">
+                {appTitle}
+              </Typography>
+            </Button>
             <Box sx={{ display: { xs: "none", sm: "block" } }}>
               <Button href="/weather" sx={{ color: "#fff" }}>
                 Laundry Day Recommendation
