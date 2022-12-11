@@ -11,9 +11,16 @@ import {
   MenuItem,
   ImageList,
   ImageListItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import washingMachineImg from "../image/washing-machine.png";
 import washingMachineCompImg from "../image/washing-machine-complete.png";
+import { useNavigate } from "react-router-dom";
 
 const StatusPage = () => {
   // dummy data
@@ -213,8 +220,8 @@ const StatusPage = () => {
   const [floors, setFloors] = useState([]);
   const [rooms, setRooms] = useState([]);
 
-  const [idle, setIdle] = useState([]);
-  const [occupied, setOccupied] = useState([]);
+  const [idle, setIdle] = useState(0);
+  const [occupied, setOccupied] = useState(0);
 
   const handleDorm = (e) => {
     setDorm(e.target.value);
@@ -273,11 +280,98 @@ const StatusPage = () => {
     }
   };
 
+  // clicking unoccupied laundry machine
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const [startTime, setStartTime] = useState("");
+  const [duration, setDuration] = useState(0);
+
+  const handleStartTime = (e) => {
+    setStartTime(e.target.value);
+  };
+
+  const handleDuration = (e) => {
+    setDuration(e.target.value);
+  };
+
+  // // clicking occupied laundry machine
+  // const [openDialogOcc, setOpenDialogOcc] = useState(false);
+
+  // const handleOpenDialogOcc = () => {
+  //   setOpenDialogOcc(true);
+  // };
+
+  // const handleCloseDialogOcc = () => {
+  //   setOpenDialogOcc(false);
+  // };
+
+  const machineId = "1";
+
+  const navigate = useNavigate();
+
+  const handleStartLaundry = () => {
+    setOpenDialog(false);
+    if (startTime !== "" && duration !== 0) {
+      navigate(`/my-laundry/${machineId}`, {
+        state: { id: machineId, start: startTime, duration: duration },
+      });
+    }
+  };
+
   return (
     <div>
       <Navigation />
       <Toolbar />
       <Box component="main" sx={{ p: 8 }}>
+        <Dialog open={openDialog}>
+          <DialogTitle>Start A New Laundry Session</DialogTitle>
+          <DialogContent>
+            <Box sx={{ p: 2 }}>
+              <InputLabel>Start Time</InputLabel>
+              <TextField
+                autoFocus
+                id="start"
+                type="datetime-local"
+                fullWidth
+                variant="standard"
+                onChange={handleStartTime}
+              ></TextField>
+            </Box>
+            <Box sx={{ p: 2 }}>
+              <InputLabel>Duration (minutes)</InputLabel>
+              <TextField
+                id="duration"
+                type="number"
+                fullWidth
+                variant="standard"
+                onChange={handleDuration}
+              ></TextField>
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog}>Cancel</Button>
+            <Button onClick={handleStartLaundry}>Start</Button>
+          </DialogActions>
+        </Dialog>
+        {/* <Dialog open={openDialogOcc}>
+          <DialogTitle>Occupied!</DialogTitle>
+          <DialogContent>
+            <Typography>
+              Please choose another unoccupied laundry machine.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialogOcc}>OK</Button>
+          </DialogActions>
+        </Dialog> */}
         <Grid container>
           <Grid item xs={6}>
             <Typography variant="h6">Select Your Laundry Room</Typography>
@@ -335,16 +429,25 @@ const StatusPage = () => {
           </Grid>
           <Grid item xs={6}>
             <Typography variant="h6">Laundry Room Status</Typography>
+            <Typography variant="subtitle2">
+              Select an empty laundry machine to start a new laundry session.
+            </Typography>
             <Grid container sx={{ py: 2 }} alignItems="center">
               <ImageList cols={3} sx={{ width: 500 }}>
                 {Array.from(Array(idle)).map((item, idx) => (
                   <ImageListItem key={idx} sx={{ p: 2 }}>
-                    <img src={washingMachineCompImg}></img>
+                    <img
+                      src={washingMachineCompImg}
+                      onClick={handleOpenDialog}
+                    ></img>
                   </ImageListItem>
                 ))}
                 {Array.from(Array(occupied)).map((item, idx) => (
                   <ImageListItem key={idx} sx={{ p: 2 }}>
-                    <img src={washingMachineImg}></img>
+                    <img
+                      src={washingMachineImg}
+                      onClick={handleOpenDialog}
+                    ></img>
                   </ImageListItem>
                 ))}
               </ImageList>
