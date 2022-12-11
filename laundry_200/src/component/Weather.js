@@ -20,13 +20,15 @@ function Weather(props) {
       <img
         src={
           props.weather === "Rain"
-            ? Rain
+            ? Clouds
             : props.weather === "Clear"
             ? Clear
             : props.weather === "Snow"
             ? Snow
             : Clouds
         }
+        width="100"
+        height="100"
       ></img>
     </div>
   );
